@@ -6,7 +6,7 @@ import {pdf_file_read, waitForFileToDownload, waitForMultipleFilesToDownload} fr
 
 
 const runDate = new Date();
-const resultFolder = "cypress\\results"//String("results\\D_" + runDate.getFullYear() + "-" + Number(runDate.getMonth() + 1) + "-" + runDate.getDate() + "_T_" + runDate.getHours() + "-" + runDate.getMinutes() + "-" + runDate.getSeconds());
+const resultFolder = String("results\\D_" + runDate.getFullYear() + "-" + Number(runDate.getMonth() + 1) + "-" + runDate.getDate() + "_T_" + runDate.getHours() + "-" + runDate.getMinutes() + "-" + runDate.getSeconds());
 
 export default defineConfig({
 
