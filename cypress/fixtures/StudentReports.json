@@ -1,0 +1,15 @@
+{
+    "url" : "https://svadhi.globalvoxprojects.com/",
+
+    "login" : {
+        "email" : "svadhi@admin.com",
+        "password" : "Admin@1234",
+        "loginButtonText" : "Login"
+    },
+
+    "studentReport": {
+        "CSAS" : "Character Skill Assesment Score",
+        "searchbox" : "Student ID Search..."
+    }
+
+}

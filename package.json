@@ -1,0 +1,28 @@
+{
+  "name": "democypress",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx cypress run",
+    "debug": "npx cypress open",
+    "chrome": "npx cypress run --headed --browser chrome"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@cypress/xpath": "^2.0.3",
+    "cypress": "^12.11.0",
+    "cypress-mochawesome-reporter": "^3.4.0",
+    "cypress-parallel": "^0.13.0",
+    "cypress-plugin-tab": "^1.0.5",
+    "cypress-terminal-report": "^5.1.1",
+    "fs": "^0.0.1-security",
+    "pdf-parse": "^1.1.1",
+    "typescript": "^5.0.4"
+  },
+  "devDependencies": {
+    "@types/pdf-parse": "^1.1.1"
+  }
+}
