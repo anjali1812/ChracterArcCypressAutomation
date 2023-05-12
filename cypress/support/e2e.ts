@@ -18,9 +18,3 @@ import './commands'
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
-import 'cypress-mochawesome-reporter/register';
-require("cypress-terminal-report/src/installLogsCollector")();
-import '@cypress/xpath';
-import 'cypress-plugin-tab';
-var fs = require('fs');
-import pdfParser from 'pdf-parse'
