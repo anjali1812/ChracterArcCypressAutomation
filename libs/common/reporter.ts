@@ -9,7 +9,7 @@ export function clearContext() {
     contextMessages = []
 }
 
-export async function info(value: string,screenShot: boolean) {
+export async function info(value: string,screenShot?: boolean) {
     let contMsg : any= {}
 
     contMsg.text= value
