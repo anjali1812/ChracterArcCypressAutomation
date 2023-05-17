@@ -11,8 +11,7 @@
     "report:merge": "mochawesome-merge 'report/json/*.json' > report/mochawesome.json",
     "report:build": "marge report/mochawesome.json -f index -o report --assetsDir report/assets",
     "final:report": " npm run report:merge && npm run report:build",
-    "test": "npm run cy:parallel-test || npm run final:report",
-    "final": "npm run final:report",
+    "test": "npm run cy:parallel-test & npm run final:report",
 
     "chrome" : "cypress run --headed --browser=chrome --spec",
     "edge" : "cypress run --headed --browser=edge"
