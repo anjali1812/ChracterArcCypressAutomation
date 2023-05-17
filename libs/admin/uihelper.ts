@@ -67,6 +67,9 @@ export async function setInputUsingPlaceHolder(label: string, text: string){
 }
 
 export async function verifyMultipleFilesDownload(studentIds: string){
+
+    reporter.info("Downloading Reports of multiple students" , true)
+
     let studentID= studentIds.split(";")
 
     // for (let i = 0; i < studentID.length; i++) {
@@ -96,10 +99,11 @@ export async function verifyMultipleFilesDownload(studentIds: string){
 
 export async function verifyFileDownload(studentId: string){
 
-    reporter.pass("Downloading Multiple Files", true)
-
     clickElementWithXpath("//a//p[text()='Character Skill Assesment Score']")
     cy.wait(5000)
+
+    reporter.pass("Downloading Report of StudentID : " + studentId, true)
+
     setInputUsingPlaceHolder("Student ID Search...",studentId)
     cy.wait(10000)
     clickButton("Download")
@@ -118,7 +122,7 @@ export async function verifyFileDownload(studentId: string){
                     cy.log(String(fileContent))
             } )
         }else{
-            reporter.fail("File " + studentId+"_Character_Arc.pdf not downloaded", true)
+            reporter.fail("File " + studentId+"_Character_Arc.pdf not downloaded", false)
         }
         
     })

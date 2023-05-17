@@ -12,12 +12,12 @@ export function clearContext() {
 export async function info(value: string,screenShot?: boolean) {
     let contMsg : any= {}
 
-    contMsg.text= value
+    contMsg.text= "[INFO] : " + value
 
     if(screenShot)
         contMsg.img= await takeScreenShot()
-    else
-        contMsg.img=null
+    // else
+    //     contMsg.img=null
 
     contextMessages.push(contMsg)
     return;
@@ -27,12 +27,12 @@ export async function info(value: string,screenShot?: boolean) {
   
     let contMsg : any= {}
 
-    contMsg.text= value
+    contMsg.text= "[PASS] : " + value
 
     if(screenShot)
         contMsg.img= await takeScreenShot()
-    else
-        contMsg.img=null
+    // else
+    //     contMsg.img=null
 
     contextMessages.push(contMsg)
 
@@ -47,11 +47,11 @@ export async function info(value: string,screenShot?: boolean) {
  export async function fail(value: string, screenShot? : boolean) {
     let contMsg : any= {}
 
-    contMsg.text= value
+    contMsg.text= "[FAILED] : " + value
     if(screenShot)
         contMsg.img= await takeScreenShot()
-    else
-        contMsg.img=null
+    // else
+    //     contMsg.img=null
 
     contextMessages.push(contMsg)
 
@@ -92,10 +92,19 @@ export async function takeScreenShot(){
         
     if(test.final){
         contextMessages.forEach( function(msg){
+
+        if(msg.img){
             addContext({ test }, {
-            title: msg.text ,
-            value: msg.img
-        })
+                title: msg.text ,
+                value: msg.img
+            })
+        }else{
+            addContext({ test }, {
+                title: msg.text ,
+                value : ""
+            })
+        }
+            
         
         } )
 
