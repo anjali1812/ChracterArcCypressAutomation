@@ -9,8 +9,3 @@ var fs = require('fs');
 import pdfParser from 'pdf-parse'
 const addContext = require('mochawesome/addContext');
 
-import * as reporter from "../../libs/common/reporter";
-
-Cypress.on('test:after:run', (test) => {
-    reporter.addToContext(test)
-});

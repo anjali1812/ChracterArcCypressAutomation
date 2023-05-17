@@ -2,38 +2,49 @@ const fs = require("fs");
 const path = require('path')
 const pdf = require('pdf-parse');
 
+import * as config from "../../cypress.config"
+
 function think(Sec: number) {
     return new Promise(resolve => setTimeout(resolve, Sec * 1000));
 }
 
-export const waitForMultipleFilesToDownload = async function waitForMultipleFilesToDownload(dirPath: string){
-    await think(5)
-
-    console.log("Files Download path is : " + dirPath)
-    console.log(new Date().getMinutes() + ":" + new Date().getSeconds() + "=>" + fs.readdirSync(dirPath))
-
+export const waitForMultipleFilesToDownload = async function waitForMultipleFilesToDownload(downloadFilesNum : number){
     let seconds = 0
+    await think(5)
+    seconds+=5
+
+    let dirPath= config.default.downloadsFolder
+    console.log("Files Download path is : " + dirPath)
+    
+    if( (fs.readdirSync(dirPath)).length <= 0 )
+    {
+        await think(10)
+        seconds +=10
+    }
+
+    console.log(new Date().getMinutes() + ":" + new Date().getSeconds() + "=>" + fs.readdirSync(dirPath))
+    
     let dl_wait = true
     while (dl_wait && seconds < 200) {
         await think(2)
         dl_wait = false
 
         console.log(new Date().getMinutes() + ":" + new Date().getSeconds() + "=>" + fs.readdirSync(dirPath))
-
+        
         for (let fname of fs.readdirSync(dirPath)){
-            if (fname.endsWith('.crdownload')){
+            if (fname.endsWith('.crdownload') || (fs.readdirSync(dirPath)).length!=downloadFilesNum){
                 dl_wait = true
             }
         }
 
-        seconds += 1
+        seconds += 2
     }
 
-    console.log( (fs.readdirSync(dirPath)).length +" downloaded in : " + ((seconds*2)+5) + " seconds")
+    console.log( (fs.readdirSync(dirPath)).length +" downloaded in : " + (seconds) + " seconds")
 
     await think(2)
     
-    return (fs.readdirSync(dirPath)).length
+    return (seconds)
 }
 
 
@@ -46,34 +57,46 @@ export const waitForFileToDownload = async function waitForFileToDownload(filPat
     }
 
     console.log("Downloading file : " + dir[dir.length-1])
-
-    await think(5)
-
     console.log("File Download path is : " + dirPath)
+    
+    let seconds = 0
+    await think(5)
+    seconds+=5
+
+    if( (fs.readdirSync(dirPath)).length <= 0 )
+    {
+        await think(5)
+        seconds +=5
+    }
+
     // console.log(new Date().getMinutes() + ":" + new Date().getSeconds() + "=>" + fs.readdirSync(dirPath))
 
-    let seconds = 0
     let dl_wait = true
     while (dl_wait && seconds < 50) {
         await think(2)
         dl_wait = false
 
-        // console.log(new Date().getMinutes() + ":" + new Date().getSeconds() + "=>" + fs.readdirSync(dirPath))
+        console.log(new Date().getMinutes() + ":" + new Date().getSeconds() + "=>" + fs.readdirSync(dirPath))
 
         for (let fname of fs.readdirSync(dirPath)){
-            if (fname.endsWith('.crdownload') && !fs.existsSync(filPath)){
+            if (fname.endsWith('.crdownload') || !fs.existsSync(filPath)){
                 dl_wait = true
             }
         }
 
-        seconds += 1
+        seconds += 2
     }
 
-    console.log("File " + dir[dir.length-1] +" Downloaded in : " + ((seconds*2)+5) + " seconds." )  
+    console.log("File " + fs.readdirSync(dirPath) +" Downloaded in : " + (seconds) + " seconds." )  
 
     await think(2)
     
-    return null
+    let fileObj:Object = {
+        "timeTakenToDownload" : seconds,
+        "fileDownloaded" : fs.readdirSync(dirPath)
+    }
+
+    return fileObj
 }
 
 export const pdf_file_read = (filPath: string) =>{

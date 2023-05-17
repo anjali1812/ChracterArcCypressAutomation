@@ -1,6 +1,17 @@
-import * as uihelper from "../../libs/admin/uihelper";
+import * as uihelper from "../../../libs/admin/uihelper";
+import * as reporter from "../../../libs/common/reporter"
 
 describe("Login Test Suite", function(){
+
+    this.beforeEach(function(){
+        reporter.clearContext()        
+    })
+
+    this.afterEach(function(){
+        console.log("AFTER EACH")
+        reporter.addToContext()
+    })
+
     it("1. Login with correct username and password", function(){
         uihelper.launchUrl("https://svadhi.globalvoxprojects.com/")
         uihelper.login("svadhi@admin.com","Admin@1234","Login")

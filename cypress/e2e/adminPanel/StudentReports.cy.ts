@@ -1,7 +1,19 @@
-import * as uihelper from "../../libs/admin/uihelper";
-let studentData= require("../fixtures/StudentReports.json")
+import * as uihelper from "../../../libs/admin/uihelper";
+let studentData= require("../../fixtures/StudentReports.json")
+import * as reporter from "../../../libs/common/reporter"
 
 describe("Student Reports test suite", function(){
+
+    this.beforeEach(function(){
+        reporter.clearContext()        
+    })
+
+    this.afterEach(function(){
+        console.log("AFTER EACH")
+        reporter.addToContext()
+    })
+
+
     it("1. Verify Student Reports Are Shown", function(){
         uihelper.launchUrl(studentData.url)
         uihelper.login(studentData.login.email, studentData.login.password, studentData.login.loginButtonText)
@@ -94,36 +106,38 @@ describe("Student Reports test suite", function(){
     it("11. Download report of Searched Student", function(){
         uihelper.launchUrl("https://svadhi.globalvoxprojects.com/")
         uihelper.login("svadhi@admin.com", "Admin@1234", "Login")
-        uihelper.clickElementWithXpath("//a//p[text()='Character Skill Assesment Score']")
-        cy.wait(5000)
-        uihelper.setInputUsingPlaceHolder("Student ID Search...","434")
-        cy.wait(10000)
-        uihelper.clickButton("Download")
 
-        cy.task("waitForFileToDownload", String(Cypress.config("downloadsFolder") + "\\434_Character_Arc.pdf"))
-        cy.task("pdf_file_read", String(Cypress.config("downloadsFolder") + "\\434_Character_Arc.pdf")).then( (fileContent)=>{
-
-        // cy.task("readFileMaybe", "C:\\AnjaliParmar\\DemoCypress\\results\\D_2023-5-5_T_8-57-23\\donwloads\\145_Character_Arc.pdf").then( (fileContent)=>{
-
-        // cy.task("readFileMaybe", "C:\\AnjaliParmar\\AnjaliMacData\\Anjali_Resume_QA.pdf").then( (fileContent)=>{
-            // cy.log(  ">>>>>>>>>>>>>>"+String(fileContent) +"<<<<<<<<<<<<<<<<<<")
-
-            if(String(fileContent).toLowerCase() === "" || String(fileContent).toLowerCase() != null)
-                cy.log("FAILED")
-            else
-                cy.log(String(fileContent))
-        } )
-
-        // uihelper.setInputUsingPlaceHolder("Student ID Search...","494")
+        uihelper.verifyFileDownload("434")
+        // uihelper.clickElementWithXpath("//a//p[text()='Character Skill Assesment Score']")
+        // cy.wait(5000)
+        // uihelper.setInputUsingPlaceHolder("Student ID Search...","434")
         // cy.wait(10000)
         // uihelper.clickButton("Download")
 
-        // cy.task("waitForFileToDownload", String(Cypress.config("downloadsFolder") + "\\494_Character_Arc.pdf"))
+        // cy.task("waitForFileToDownload", String(Cypress.config("downloadsFolder") + "\\434_Character_Arc.pdf"))
+        // cy.task("pdf_file_read", String(Cypress.config("downloadsFolder") + "\\434_Character_Arc.pdf")).then( (fileContent)=>{
 
-        // cy.task("log","This is console log")
+        // // cy.task("readFileMaybe", "C:\\AnjaliParmar\\DemoCypress\\results\\D_2023-5-5_T_8-57-23\\donwloads\\145_Character_Arc.pdf").then( (fileContent)=>{
+
+        // // cy.task("readFileMaybe", "C:\\AnjaliParmar\\AnjaliMacData\\Anjali_Resume_QA.pdf").then( (fileContent)=>{
+        //     // cy.log(  ">>>>>>>>>>>>>>"+String(fileContent) +"<<<<<<<<<<<<<<<<<<")
+
+        //     if(String(fileContent).toLowerCase() === "" || String(fileContent).toLowerCase() != null)
+        //         cy.log("FAILED")
+        //     else
+        //         cy.log(String(fileContent))
+        // } )
+
+        // // uihelper.setInputUsingPlaceHolder("Student ID Search...","494")
+        // // cy.wait(10000)
+        // // uihelper.clickButton("Download")
+
+        // // cy.task("waitForFileToDownload", String(Cypress.config("downloadsFolder") + "\\494_Character_Arc.pdf"))
+
+        // // cy.task("log","This is console log")
     })
 
-    it.only("12. Download report of Multiple students", function(){
+    it("12. Download report of Multiple students", function(){
         uihelper.launchUrl("https://svadhi.globalvoxprojects.com/")
         uihelper.login("svadhi@admin.com", "Admin@1234", "Login")
         uihelper.clickElementWithXpath("//a//p[text()='Character Skill Assesment Score']")

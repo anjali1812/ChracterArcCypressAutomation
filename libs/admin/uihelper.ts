@@ -3,12 +3,12 @@ import * as reporter from "../common/reporter";
 import fs from "fs"
 import pdfParser from 'pdf-parse'
 
-export function launchUrl(url : string){
+export async function launchUrl(url : string){
     cy.visit(url);
     reporter.pass("Launched " + url, true)
 }
 
-export function login(username: string, password: string, buttonText: string){
+export async function login(username: string, password: string, buttonText: string){
     setInInputText("Email",username);
     setInInputText("Password", password)
 
@@ -17,7 +17,7 @@ export function login(username: string, password: string, buttonText: string){
     reporter.pass(username + " logged in successfully", true)
 }
 
-export function clickElementWithXpath(xpath: string){
+export async function clickElementWithXpath(xpath: string){
     cy.xpath(xpath)
     .click()
     .then(
@@ -29,12 +29,12 @@ export function clickElementWithXpath(xpath: string){
     reporter.pass("Clicked on xpath" + xpath, true)
 }
 
-export function verifyReadOnlyText(text : string){
+export async function verifyReadOnlyText(text : string){
     cy.xpath("//*[normalize-space(text())='"+text+"' or normalize-space()='"+text+"']").should("be.visible")
     reporter.pass("Text [ " + text + " ] is visible", true)
 }
 
-export function assertElementUsingLocator(locator:string){
+export async function assertElementUsingLocator(locator:string){
 
     if( locator.includes("//") )
         cy.xpath(locator).should("be.visible")
@@ -43,7 +43,7 @@ export function assertElementUsingLocator(locator:string){
     reporter.pass("Found element with xpath [ " + locator + " ]", true)
 }
 
-export function assertElementNotPresentUsingLocator(locator:string){
+export async function assertElementNotPresentUsingLocator(locator:string){
 
     if( locator.includes("//") )
         cy.xpath(locator).should("not.be.visible")
@@ -52,33 +52,82 @@ export function assertElementNotPresentUsingLocator(locator:string){
     reporter.pass("Not Found element with xpath [ " + locator + " ] as expected", true)
 }
 
-export function setInInputText(label : string,text: string){
+export async function setInInputText(label : string,text: string){
     cy.xpath("//label[contains(text(),'"+label+"')]//following::input[1]").clear().then(()=>{ cy.wait(500) })
 
     cy.xpath("//label[contains(text(),'"+label+"')]//following::input[1]").type(text).then(()=>{ cy.wait(100) })
     reporter.pass("Value " + text + " entered in " + label + " inputbox", true)
 }
 
-export function setInputUsingPlaceHolder(label: string, text: string){
+export async function setInputUsingPlaceHolder(label: string, text: string){
     cy.xpath("//input[@placeholder='"+label+"']").clear().then(()=>{ cy.wait(500) })
 
     cy.xpath("//input[@placeholder='"+label+"']").type(text).then(()=>{ cy.wait(100) })
     reporter.pass("Value " + text + " entered in " + label + " inputbox", true)
 }
 
-export function verifyMultipleFilesDownload(studentIds: string){
+export async function verifyMultipleFilesDownload(studentIds: string){
     let studentID= studentIds.split(";")
 
-    for (let i = 0; i < studentID.length; i++) {
-        cy.xpath("//p[text()='"+studentID[i]+"']/..//following-sibling::button[@title='Download']").click()   
-    }
+    // for (let i = 0; i < studentID.length; i++) {
+    //     cy.xpath("//p[text()='"+studentID[i]+"']/..//following-sibling::button[@title='Download']").click()   
+    // }
 
-    cy.task("waitForMultipleFilesToDownload", String(Cypress.config("downloadsFolder") )).then( function(numOfFilesDownloaded){
-        reporter.pass("Number of files in downloads folder is : " + numOfFilesDownloaded)
-    } )
+    let i=0
+    const max=10
+    cy.xpath("//button[@title='Download']")
+    .each( async function($elem, index) {
+
+        if (i === max) return false;
+
+        cy.wrap($elem).click()
+        
+        i++
+        return;
+        
+    }).then(
+        function(){
+            cy.task("waitForMultipleFilesToDownload", i , {timeout : 1000000}).then( function(timeTakenToCompleteDownload){
+                reporter.pass(i + " Number of files in downloads folder is downloaded in : " + timeTakenToCompleteDownload + " seconds", false)
+            } )
+        }
+    )
 }
 
-export function clickButton(buttonText:string){
+export async function verifyFileDownload(studentId: string){
+
+    reporter.pass("Downloading Multiple Files", true)
+
+    clickElementWithXpath("//a//p[text()='Character Skill Assesment Score']")
+    cy.wait(5000)
+    setInputUsingPlaceHolder("Student ID Search...",studentId)
+    cy.wait(10000)
+    clickButton("Download")
+
+    cy.task("waitForFileToDownload", String(Cypress.config("downloadsFolder") + "\\"+studentId+"_Character_Arc.pdf"), {timeout: 100000}).then( (fileDetails : any)=>{
+        cy.wait(1000)
+
+        if(String(fileDetails.fileDownloaded).includes(studentId+"_Character_Arc.pdf")){
+
+            reporter.pass("File " + studentId+"_Character_Arc.pdf downloaded in " + fileDetails.timeTakenToDownload + " seconds", true)
+
+            cy.task("pdf_file_read", String(Cypress.config("downloadsFolder") + "\\"+studentId+"_Character_Arc.pdf")).then( (fileContent)=>{    
+                if(String(fileContent).toLowerCase() === "" || String(fileContent).toLowerCase() != null)
+                    reporter.info("File Content is null")
+                else
+                    cy.log(String(fileContent))
+            } )
+        }else{
+            reporter.fail("File " + studentId+"_Character_Arc.pdf not downloaded", true)
+        }
+        
+    })
+    
+
+
+}
+
+export async function clickButton(buttonText:string){
     cy.xpath("//button[text()='"+buttonText+"' or @title='"+buttonText+"']")
     .click()
     .then( ()=>{
@@ -88,7 +137,7 @@ export function clickButton(buttonText:string){
     reporter.pass("Clicked on " + buttonText, true)
 }
 
-export function clickLink(linkName: string){
+export async function clickLink(linkName: string){
     cy.xpath("//a[.='"+linkName+"']")
     .click()
     .then( ()=>{
@@ -98,7 +147,7 @@ export function clickLink(linkName: string){
     reporter.pass("Clicked on " + linkName, true)
 }
 
-export function verifyToastMessage(textToBeVerified: string){
+export async function verifyToastMessage(textToBeVerified: string){
 
     var toastFoundAt = -1;
    cy.get(".Toastify", { timeout: 5000 })
@@ -122,13 +171,13 @@ export function verifyToastMessage(textToBeVerified: string){
 
 }
 
-export function logout(){
+export async function logout(){
     clickLink("Logout")
 
     reporter.pass("Logged out successfully", true)
 }
 
-export function moveToLastInPagination(){
+export async function moveToLastInPagination(){
     cy.xpath("//ul[@class='custom-pagination']/li[not(contains(@class,'previous-pagination')) and not(contains(@class,'next-pagination'))]")
     .should("be.visible")
     .should("have.length", 4)
@@ -146,7 +195,7 @@ export function moveToLastInPagination(){
     reporter.pass("Moved to last page", true)
 }
 
-export function verifyRowValueExistsInTable(values: string, section?: string){
+export async function verifyRowValueExistsInTable(values: string, section?: string){
     let colValue: string[] = values.split(";")
 
     let foundAtRow= -1
@@ -202,7 +251,7 @@ export function verifyRowValueExistsInTable(values: string, section?: string){
     
 }
 
-export function verifyInDivisionTable(values:string, rowNumber: string, section: string){
+export async function verifyInDivisionTable(values:string, rowNumber: string, section: string){
     let colValue: string[] = values.split(";")
     let valuesFound=0
 

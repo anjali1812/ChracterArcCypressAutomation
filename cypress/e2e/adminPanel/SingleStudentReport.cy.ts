@@ -1,7 +1,18 @@
-import * as uihelper from "../../libs/admin/uihelper";
-let studentData= require("../fixtures/StudentReports.json")
+import * as uihelper from "../../../libs/admin/uihelper";
+let studentData= require("../../fixtures/StudentReports.json")
+import * as reporter from "../../../libs/common/reporter"
 
 describe("Particular Student Reports test suite ", function(){
+
+    this.beforeEach(function(){
+        reporter.clearContext()        
+    })
+
+    this.afterEach(function(){
+        console.log("AFTER EACH")
+        reporter.addToContext()
+    })
+
     it("1. Verify Searched Student Report is opened", function(){
         uihelper.launchUrl(studentData.url)
         uihelper.login(studentData.login.email, studentData.login.password, studentData.login.loginButtonText)
@@ -23,19 +34,19 @@ describe("Particular Student Reports test suite ", function(){
         uihelper.clickElementWithXpath("//div[contains(@class,'user_card')]//p[text()='434']")
 
         uihelper.clickButton("Student Info")
-        uihelper.assertElementUsingLocator("//button[text()='Student Info' or @title='Student Info']")
+        uihelper.assertElementUsingLocator("//button[(text()='Student Info' or @title='Student Info') and @aria-selected='true']")
 
         uihelper.clickButton("Academic Achivements")
-        uihelper.assertElementUsingLocator("//button[text()='Academic Achivements' or @title='Academic Achivements']")
+        uihelper.assertElementUsingLocator("//button[(text()='Academic Achivements' or @title='Academic Achivements') and @aria-selected='true']")
 
         uihelper.clickButton("Holistic Development")
-        uihelper.assertElementUsingLocator("//button[text()='Holistic Development' or @title='Holistic Development']")
+        uihelper.assertElementUsingLocator("//button[(text()='Holistic Development' or @title='Holistic Development') and @aria-selected='true']")
 
         uihelper.clickButton("Understanding your skills")
-        uihelper.assertElementUsingLocator("//button[text()='Understanding your skills' or @title='Understanding your skills']")
+        uihelper.assertElementUsingLocator("//button[(text()='Understanding your skills' or @title='Understanding your skills') and @aria-selected='true']")
 
         uihelper.clickButton("Interpreting your skills")
-        uihelper.assertElementUsingLocator("//button[text()='Interpreting your skills' or @title='Interpreting your skills']")
+        uihelper.assertElementUsingLocator("//button[(text()='Interpreting your skills' or @title='Interpreting your skills') and @aria-selected='true']")
     })
 
     it("3. Verify values in Student Info table", function(){

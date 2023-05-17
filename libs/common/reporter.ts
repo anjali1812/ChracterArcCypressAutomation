@@ -5,9 +5,21 @@ import dateformat from "dateformat";
 export let contextMessages : any[]=[]
 let now= new Date()
 
-export async function info(value: string) {
-   //  cy.addTestContext("Info : " + value);
-   //  cy.log("Info : " + value);
+export function clearContext() {
+    contextMessages = []
+}
+
+export async function info(value: string,screenShot: boolean) {
+    let contMsg : any= {}
+
+    contMsg.text= value
+
+    if(screenShot)
+        contMsg.img= await takeScreenShot()
+    else
+        contMsg.img=null
+
+    contextMessages.push(contMsg)
     return;
  }
  
@@ -16,27 +28,34 @@ export async function info(value: string) {
     let contMsg : any= {}
 
     contMsg.text= value
-    contMsg.img= takeScreenShot(value)
+
+    if(screenShot)
+        contMsg.img= await takeScreenShot()
+    else
+        contMsg.img=null
 
     contextMessages.push(contMsg)
 
-    console.log("LENGHT : " + contextMessages.length)
+    // console.log(">>> " + value)
+    // console.log("LENGHT : " + contextMessages.length)
 
     // console.log("PASS >>>>>>>> " + contMsg.text + " <<<<<<<<< " + contMsg.img)
 
     return;
  }
  
- export async function fail(value: string) {
+ export async function fail(value: string, screenShot? : boolean) {
     let contMsg : any= {}
 
     contMsg.text= value
-    contMsg.img= takeScreenShot(value)
+    if(screenShot)
+        contMsg.img= await takeScreenShot()
+    else
+        contMsg.img=null
 
     contextMessages.push(contMsg)
-    console.log("LENGHT : " + contextMessages.length)
-    return;
 
+    throw new Error("Failed : " + value)
  }
 
  export function getTimestamp(format?: string) {
@@ -55,34 +74,34 @@ export async function info(value: string) {
 }
 
  
-  function takeScreenShot(value : string){
+export async function takeScreenShot(){
     const runDate = new Date();
 
-    let ss_name :string =  runDate.getHours() + "-" + runDate.getMinutes() + "-" + runDate.getSeconds() + "_" + runDate.getMilliseconds()
+    let ss_name :string =  runDate.getHours() + "-" + runDate.getMinutes() + "-" + runDate.getSeconds() + "-" + runDate.getMilliseconds()
     let ss_path= String( Cypress.config("screenshotsFolder") + "\\" + Cypress.spec.name + "\\" + ss_name + ".png")
 
-    cy.screenshot(ss_name).then(()=>{ cy.wait(500)})
+    cy.screenshot(ss_name).then(()=>{ cy.wait(2000)})
     return ss_path
  }
 
- export async function addToContext(textContext : any) {
+ export async function addToContext() {
     
-    console.log( ">>>>>>>>>>" + contextMessages.length)
+    // console.log( ">>>>>>>>>>" + contextMessages.length)
 
-    contextMessages.forEach( function(msg){
-        console.log(" <<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>> ")
-        console.log(msg.text)
-        addContext({test}, msg.text)
-        addContext({test}, msg.img)
-    } )
+    Cypress.on('test:after:run', (test) => {
+        
+    if(test.final){
+        contextMessages.forEach( function(msg){
+            addContext({ test }, {
+            title: msg.text ,
+            value: msg.img
+        })
+        
+        } )
 
-    // if (test.state === 'failed') {
-    //     contextMessages.forEach( function( msg ){
-    //         addContext({test}, msg.text)
-    //         addContext({test}, msg.img)
-    //     } )
-    // }
-    // else{
-    //   addContext({ test }, "Context text Passed")
-    // }
+        contextMessages= []
+    }
+        
+        
+    });    
  }

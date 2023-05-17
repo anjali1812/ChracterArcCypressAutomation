@@ -6,7 +6,8 @@ import {pdf_file_read, waitForFileToDownload, waitForMultipleFilesToDownload} fr
 
 
 const runDate = new Date();
-const resultFolder = "cypress\\reports"//String("results\\D_" + runDate.getFullYear() + "-" + Number(runDate.getMonth() + 1) + "-" + runDate.getDate() + "_T_" + runDate.getHours() + "-" + runDate.getMinutes() + "-" + runDate.getSeconds());
+// const resultFolder = "cypress\\reports"//String("results\\D_" + runDate.getFullYear() + "-" + Number(runDate.getMonth() + 1) + "-" + runDate.getDate() + "_T_" + runDate.getHours() + "-" + runDate.getMinutes() + "-" + runDate.getSeconds());
+const resultFolder = String("results\\D_" + runDate.getFullYear() + "-" + Number(runDate.getMonth() + 1) + "-" + runDate.getDate() + "_T_" + runDate.getHours() + "-" + runDate.getMinutes() + "-" + runDate.getSeconds());
 
 export default defineConfig({
 
@@ -19,35 +20,40 @@ export default defineConfig({
 
 //   reporter: 'mochawesome',
 //   reporterOptions: {
-//     reportDir: resultFolder,
-//     reportFilename: "report-[status]",
-//     reportPageTitle: "Mochawesome",
-//     embeddedScreenshots: true,
-//     charts: true,
-//     html: true,
-//     json: true,
-//     overwrite: true,
-//     inlineAssets: false,
-//     saveAllAttempts: false,
-//     code: false,
-//     autoOpen: true,
-//     quiet: false,
-//     ignoreVideos: true,
+    // reportDir: resultFolder,
+    // reportFilename: "report-[status]",
+    // reportPageTitle: "Mochawesome",
+    // embeddedScreenshots: true,
+    // charts: true,
+    // html: true,
+    // json: true,
+    // overwrite: true,
+    // inlineAssets: false,
+    // saveAllAttempts: false,
+    // code: false,
+    // autoOpen: true,
+    // quiet: false,
+    // ignoreVideos: true,
 //  },
 
   "reporter": "cypress-multi-reporters",
     "reporterOptions": {
       "reporterEnabled": "mochawesome",
       "mochawesomeReporterOptions": {
-          "reportDir": resultFolder,
-          "reportFilename": "reportDummy",
-          "quite": true,
-          "overwrite": true,
-          "html": true,
-          "json": true,
-          "autoOpen": true,
-          "screenshotOnRunFailure": true
-
+        reportDir: resultFolder,
+        reportFilename: "report-[status]",
+        reportPageTitle: "Mochawesome",
+        embeddedScreenshots: true,
+        charts: true,
+        html: true,
+        json: true,
+        overwrite: true,
+        inlineAssets: false,
+        saveAllAttempts: false,
+        code: false,
+        autoOpen: true,
+        quiet: false,
+        ignoreVideos: true,
       }
   },
   e2e: {
@@ -60,25 +66,25 @@ export default defineConfig({
         printLogsToFile: "always",
       };
 
-      // on('task', {
-      //   waitForFileToDownload
-      // })
+      on('task', {
+        waitForFileToDownload
+      })
 
-      // on('task', {
-      //   waitForMultipleFilesToDownload
-      // })
+      on('task', {
+        waitForMultipleFilesToDownload
+      })
 
-      // on('task', {
-      //   pdf_file_read
-      // })
+      on('task', {
+        pdf_file_read
+      })
 
-      // on('task',{
-      //   log(value){
-      //     console.log(">>>>>>>>" + value)
+      on('task',{
+        log(value){
+          console.log(">>>>>>>>" + value)
 
-      //     return null
-      //   }
-      // })
+          return null
+        }
+      })
     
       require('cypress-terminal-report/src/installLogsPrinter')(on, options);
       // require('cypress-mochawesome-reporter/plugin')(on);
