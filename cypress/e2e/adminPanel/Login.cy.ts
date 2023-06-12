@@ -1,3 +1,4 @@
+import { isWindow } from "cypress/types/jquery";
 import * as uihelper from "../../../libs/admin/uihelper";
 import * as reporter from "../../../libs/common/reporter"
 
@@ -34,7 +35,7 @@ describe("Login Test Suite", function(){
     it("4. Verify Email is required", function(){
         uihelper.launchUrl("https://svadhi.globalvoxprojects.com/")
         uihelper.clickElementWithXpath("//label[contains(text(),'Email')]//following::input[1]")
-        cy.xpath("//label[contains(text(),'Email')]//following::input[1]").tab()
+        cy.xpath("//label[contains(text(),'Email')]//following::input[1]").tab().then( ()=> { cy.wait(1000)} )
         uihelper.assertElementUsingLocator("//*[normalize-space(text())='Required' or normalize-space()='Required']")
     })
 
@@ -48,7 +49,7 @@ describe("Login Test Suite", function(){
     it("6. Verify Email is valid Email Id", function(){
         uihelper.launchUrl("https://svadhi.globalvoxprojects.com/")
         uihelper.setInInputText("Email", "svadhi")
-        cy.xpath("//label[contains(text(),'Email')]//following::input[1]").tab()
+        cy.xpath("//label[contains(text(),'Email')]//following::input[1]").tab().then( ()=> { cy.wait(1000)} )
         uihelper.assertElementUsingLocator("//*[normalize-space(text())='Must be a valid email' or normalize-space()='Must be a valid email']")
     })
 

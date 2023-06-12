@@ -78,7 +78,7 @@ export async function takeScreenShot(){
     const runDate = new Date();
 
     let ss_name :string =  runDate.getHours() + "-" + runDate.getMinutes() + "-" + runDate.getSeconds() + "-" + runDate.getMilliseconds()
-    let ss_path= String( Cypress.config("screenshotsFolder") + "\\" + Cypress.spec.name + "\\" + ss_name + ".png")
+    let ss_path= String( ".\\screenshots\\" + Cypress.spec.name + "\\" + ss_name + ".png")
 
     cy.screenshot(ss_name).then(()=>{ cy.wait(2000)})
     return ss_path
@@ -87,6 +87,7 @@ export async function takeScreenShot(){
  export async function addToContext() {
     
     // console.log( ">>>>>>>>>>" + contextMessages.length)
+    // cy.log( ">>>>>>>>>>" + contextMessages.length)
 
     Cypress.on('test:after:run', (test) => {
         

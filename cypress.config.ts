@@ -7,7 +7,7 @@ import {pdf_file_read, waitForFileToDownload, waitForMultipleFilesToDownload} fr
 
 const runDate = new Date();
 // const resultFolder = "cypress\\reports"//String("results\\D_" + runDate.getFullYear() + "-" + Number(runDate.getMonth() + 1) + "-" + runDate.getDate() + "_T_" + runDate.getHours() + "-" + runDate.getMinutes() + "-" + runDate.getSeconds());
-const resultFolder = String("results\\D_" + runDate.getFullYear() + "-" + Number(runDate.getMonth() + 1) + "-" + runDate.getDate() + "_T_" + runDate.getHours() + "-" + runDate.getMinutes() + "-" + runDate.getSeconds());
+const resultFolder = String("results\\D_" + runDate.getFullYear() + "-" + Number(runDate.getMonth() + 1) + "-" + runDate.getDate() + "_T_" + runDate.getHours() + "-" + runDate.getMinutes() + "-" + runDate.getSeconds() + "-" + runDate.getMilliseconds());
 
 export default defineConfig({
 
@@ -17,6 +17,7 @@ export default defineConfig({
    pageLoadTimeout: 10_000,
    chromeWebSecurity: false,
    videoCompression: false,
+   includeShadowDom: true,
 
 //   reporter: 'mochawesome',
 //   reporterOptions: {
@@ -76,14 +77,6 @@ export default defineConfig({
 
       on('task', {
         pdf_file_read
-      })
-
-      on('task',{
-        log(value){
-          console.log(">>>>>>>>" + value)
-
-          return null
-        }
       })
     
       require('cypress-terminal-report/src/installLogsPrinter')(on, options);

@@ -2,3 +2,5 @@ package-lock.json
 node_modules
 results
 report
+runner-results
+parallel-reports

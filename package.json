@@ -6,15 +6,16 @@
   "scripts": {
     "cy:run": "cypress run --headed --browser=chrome",
     "cy:parallel-test": "cypress-parallel -s cy:run -t 5 -d cypress/e2e/parallelCases -r 'mochawesome' -o 'reportDir=report/json,overwrite=false,html=false,json=true'",
-    "report:clean": "del-cli --force ./report",
+    "report:clean": "Xcopy /I /E \"report\" \"cypress\\parallel-reports\\%date:~-4,4%%date:~-10,2%%date:~-7,2%%time:~0,2%%time:~3,2%%time:~-5,5%\" & del-cli --force ./report",
     "pretest": "npm run report:clean",
     "report:merge": "mochawesome-merge 'report/json/*.json' > report/mochawesome.json",
     "report:build": "marge report/mochawesome.json -f index -o report --assetsDir report/assets",
     "final:report": " npm run report:merge && npm run report:build",
     "test": "npm run cy:parallel-test & npm run final:report",
-
-    "chrome" : "cypress run --headed --browser=chrome --spec",
-    "edge" : "cypress run --headed --browser=edge"
+    "chrome": "cypress run --headed --browser=chrome",
+    "edge": "cypress run --headed --browser=edge",
+    "parallel": "bash runner-parallel.bash",
+    "serial": "bash runner-serial.bash"
   },
   "keywords": [],
   "author": "",
@@ -40,6 +41,7 @@
   "devDependencies": {
     "@types/dateformat": "^5.0.0",
     "@types/pdf-parse": "^1.1.1",
+    "cypress-iframe": "^1.0.1",
     "rimraf": "^5.0.0"
   }
 }

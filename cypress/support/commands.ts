@@ -8,4 +8,5 @@ import { forEach } from 'cypress/types/lodash';
 var fs = require('fs');
 import pdfParser from 'pdf-parse'
 const addContext = require('mochawesome/addContext');
+import "cypress-iframe"
 

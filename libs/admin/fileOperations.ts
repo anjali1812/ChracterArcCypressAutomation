@@ -32,7 +32,7 @@ export const waitForMultipleFilesToDownload = async function waitForMultipleFile
         console.log(new Date().getMinutes() + ":" + new Date().getSeconds() + "=>" + fs.readdirSync(dirPath))
         
         for (let fname of fs.readdirSync(dirPath)){
-            if (fname.endsWith('.crdownload') || (fs.readdirSync(dirPath)).length!=downloadFilesNum){
+            if (fname.endsWith('.crdownload') || (fs.readdirSync(dirPath)).length<downloadFilesNum){
                 dl_wait = true
             }
         }
@@ -60,8 +60,8 @@ export const waitForFileToDownload = async function waitForFileToDownload(filPat
     console.log("File Download path is : " + dirPath)
     
     let seconds = 0
-    await think(5)
-    seconds+=5
+    // await think(5)
+    // seconds+=5
 
     if( (fs.readdirSync(dirPath)).length <= 0 )
     {

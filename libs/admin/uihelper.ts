@@ -77,7 +77,7 @@ export async function verifyMultipleFilesDownload(studentIds: string){
     // }
 
     let i=0
-    const max=10
+    const max=5
     cy.xpath("//button[@title='Download']")
     .each( async function($elem, index) {
 
@@ -113,7 +113,7 @@ export async function verifyFileDownload(studentId: string){
 
         if(String(fileDetails.fileDownloaded).includes(studentId+"_Character_Arc.pdf")){
 
-            reporter.pass("File " + studentId+"_Character_Arc.pdf downloaded in " + fileDetails.timeTakenToDownload + " seconds", true)
+            reporter.pass("File " + String(fileDetails.fileDownloaded) + " downloaded in " + fileDetails.timeTakenToDownload + " seconds", true)
 
             cy.task("pdf_file_read", String(Cypress.config("downloadsFolder") + "\\"+studentId+"_Character_Arc.pdf")).then( (fileContent)=>{    
                 if(String(fileContent).toLowerCase() === "" || String(fileContent).toLowerCase() != null)
@@ -281,7 +281,7 @@ export async function verifyInDivisionTable(values:string, rowNumber: string, se
         if(colValue.length===valuesFound){
             reporter.pass("Values : " + colValue + " found in section " + section + " at given row number " + rowNumber)
         }else{
-            reporter.pass("Values : " + colValue + " NOT found in section " + section + " at given row number " + rowNumber)
+            reporter.fail("Values : " + colValue + " NOT found in section " + section + " at given row number " + rowNumber)
         }
     } )
 
